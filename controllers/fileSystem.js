@@ -8,6 +8,12 @@ const {  driveFolderPath } = require("../utils/constants.js");
 
 const createFileSystemToRemoteDb = async (_, res) => {
   try{
+    try{
+      checkIfDirExists(driveFolderPath)
+    }
+    catch(err){
+      res.status(400).json({ "message": "drive folder does not exists" })
+    }
     if(checkIfDirExists(driveFolderPath)){
       let fileStructure = await parseLocalDriveIntoJson(driveFolderPath)
       const result = await prisma.Storage.create({
@@ -36,7 +42,6 @@ const updateFileSystemToRemoteDb = async (req, res) => {
     res.status(400).json({ "message": "id not provided" })
   }
   try{
-    if(checkIfDirExists(driveFolderPath)){
     let fileStructure = await parseLocalDriveIntoJson(driveFolderPath)
     const result = await prisma.Storage.update({
       data:{
@@ -52,7 +57,7 @@ const updateFileSystemToRemoteDb = async (req, res) => {
       "repository": result
     })
   }
-}
+
   catch(err){
     console.log(err)
     res.status(500).json({ "error": "Internal Server Error" })
