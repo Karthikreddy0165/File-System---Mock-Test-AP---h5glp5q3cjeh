@@ -6,15 +6,11 @@ const {
 const { prisma } = require("../db/config");
 const {  driveFolderPath } = require("../utils/constants.js");
 
+
 const createFileSystemToRemoteDb = async (_, res) => {
   try{
-    try{
-      checkIfDirExists(driveFolderPath)
-    }
-    catch(err){
-      res.status(400).json({ "message": "drive folder does not exists" })
-    }
-    if(checkIfDirExists(driveFolderPath)){
+  
+    if(await checkIfDirExists(driveFolderPath)){
       let fileStructure = await parseLocalDriveIntoJson(driveFolderPath)
       const result = await prisma.Storage.create({
         data:{
