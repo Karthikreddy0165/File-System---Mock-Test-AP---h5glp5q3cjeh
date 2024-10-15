@@ -36,6 +36,7 @@ const updateFileSystemToRemoteDb = async (req, res) => {
     res.status(400).json({ "message": "id not provided" })
   }
   try{
+    if(checkIfDirExists(driveFolderPath)){
     let fileStructure = await parseLocalDriveIntoJson(driveFolderPath)
     const result = await prisma.Storage.update({
       data:{
@@ -51,6 +52,7 @@ const updateFileSystemToRemoteDb = async (req, res) => {
       "repository": result
     })
   }
+}
   catch(err){
     console.log(err)
     res.status(500).json({ "error": "Internal Server Error" })
